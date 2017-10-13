@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.support.v7.app.NotificationCompat;
 import android.view.KeyEvent;
@@ -25,11 +27,30 @@ public class MainActivity extends Activity {
     private Button buttonNext;
     private Button buttonRandomNext;
     private Spinner spinner;
-    private Chronometer chronometer;
+    private TextView chronometer;
     private Intent intent;
     private Intent intentEdit;
     private boolean isFinished=false;
     private int limitTime=180;
+    int seconds=0;
+    boolean change=false;
+
+    final Handler handler=new Handler(){
+        private boolean t=true;
+        @Override
+        public void handleMessage(Message msg) {
+            if(change){
+                if(t){
+                    chronometer.setTextColor(0xffff0000);
+                    t=false;
+                }
+                chronometer.setText(intToTime(seconds-limitTime));
+            }else{
+                chronometer.setText(intToTime(seconds));
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +73,7 @@ public class MainActivity extends Activity {
 
         startService(intent);
 
+        chronometer.setText(intToTime(seconds));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -76,8 +98,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 spinner.setEnabled(false);
                 encourageBegin();
-                chronometer.setBase(SystemClock.elapsedRealtime());
-                chronometer.start();
+//                chronometer.setText(intToTime(seconds));
             }
         });
 
@@ -110,29 +131,21 @@ public class MainActivity extends Activity {
             }
         });
 
-        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-            boolean change=false;
-            @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                if(!change){
-                    String text=chronometer.getText().toString();
-                    String[] a=text.split(":") ;
-                    int s=0;
-                    for(String b:a){
-                        int c=Integer.parseInt(b);
-                        s*=60;
-                        s+=c;
-                    }
-                    if(s>limitTime){
-                        change=true;
-                        chronometer.setTextColor(0xAAff0000);
-                        chronometer.setBase(SystemClock.elapsedRealtime());
-                    }
-                }
+    }
 
-            }
-        });
+    private String intToTime(int seconds){
+        int hours=seconds/3600;
+        int minutes=seconds/60%60;
+        int second=seconds%60;
+        String rs=getTwoInt(hours)+":"+getTwoInt(minutes)+":"+getTwoInt(second);
+        return rs;
+    }
 
+    private String getTwoInt(int a){
+        if(a<10){
+            return "0"+a;
+        }
+        return String.valueOf(a);
     }
 
     private void encourageBegin(){
@@ -191,11 +204,12 @@ public class MainActivity extends Activity {
     private void beginTime(){
         EncourageContent encourageContent=new EncourageContent();
         long beginMill=new Date().getTime();
-        boolean change=false;
         int maxD=encourageContent.gapTime[encourageContent.gapTime.length-1];
         while (!isFinished){
             long nowWill=new Date().getTime();
             int DValue=(int)(nowWill-beginMill)/1000;
+            seconds=DValue;
+            handler.sendEmptyMessage(0);
             if(DValue-limitTime>maxD){
                 return;
             }

@@ -22,11 +22,12 @@
             android:background="#99ffff"
             android:entries="@array/spinner"/>
 
-    <Chronometer
+    <TextView
             android:id="@+id/chronometer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#66ffbb"
+            android:textColor="@color/black"
             android:gravity="center"
             android:textSize="60sp" />
 
