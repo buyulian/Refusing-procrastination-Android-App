@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Now</string>
+
+    <string name="text_view">这是一个标签</string>
+    <string name="edit_text"></string>
+    <string name="button">开始</string>
+    <string name="button_exit">退出</string>
+</resources>
