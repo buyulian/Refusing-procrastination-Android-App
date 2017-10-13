@@ -4,5 +4,6 @@
     <string name="text_view">自强不息</string>
     <string name="button">开始</string>
     <string name="button_exit">退出</string>
+    <string name="button_edit">编辑</string>
 
 </resources>

@@ -18,9 +18,11 @@ import java.util.Date;
 public class MainActivity extends Activity {
     private Button button;
     private Button buttonExit;
+    private Button buttonEdit;
     private Spinner spinner;
     private Chronometer chronometer;
     private Intent intent;
+    private Intent intentEdit;
     private boolean isFinished=false;
     private int limitTime=180;
     @Override
@@ -34,9 +36,11 @@ public class MainActivity extends Activity {
     private void initView(){
         button=findViewById(R.id.button);
         buttonExit=findViewById(R.id.buttonExit);
+        buttonEdit=findViewById(R.id.buttonEdit);
         spinner=findViewById(R.id.spinner1);
         chronometer=findViewById(R.id.chronometer);
         intent=new Intent(this,RemindService.class);
+        intentEdit=new Intent(this,EditActivity.class);
 
 
         startService(intent);
@@ -74,6 +78,13 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 exit();
+            }
+        });
+
+        buttonEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intentEdit);
             }
         });
 

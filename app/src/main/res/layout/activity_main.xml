@@ -34,8 +34,10 @@
             android:text="@string/button_exit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/buttonExit"/>
-
-
+    <Button
+            android:text="@string/button_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/buttonEdit"/>
 
 
 </LinearLayout>
