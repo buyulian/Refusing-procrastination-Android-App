@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
     private Button buttonExit;
     private Spinner spinner;
     private Chronometer chronometer;
+    private Intent intent;
     private boolean isFinished=false;
     private int limitTime=180;
     @Override
@@ -35,6 +36,11 @@ public class MainActivity extends Activity {
         buttonExit=findViewById(R.id.buttonExit);
         spinner=findViewById(R.id.spinner1);
         chronometer=findViewById(R.id.chronometer);
+        intent=new Intent(this,RemindService.class);
+
+
+        startService(intent);
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
