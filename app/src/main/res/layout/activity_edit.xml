@@ -14,5 +14,19 @@
             android:textColor="#ff0000"
             android:gravity="center" android:id="@+id/textView"/>
 
+    <EditText android:layout_width="match_parent"
+              android:id="@+id/content_edit"
+              android:textSize="14sp"
+              android:text="@string/item_end"
+              android:layout_height="wrap_content"/>
+    <Button
+            android:text="@string/save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/buttonSave"/>
+    <Button
+            android:text="@string/button_exit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/buttonExit2"/>
+
 
 </LinearLayout>

@@ -5,5 +5,8 @@
     <string name="button">开始</string>
     <string name="button_exit">退出</string>
     <string name="button_edit">编辑</string>
+    <string name="content_edit">编辑</string>
+    <string name="item_end">;</string>
+    <string name="save">保存</string>
 
 </resources>

@@ -3,7 +3,9 @@ package com.example.buyulian.study;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -30,7 +32,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-
+        initString();
     }
 
     private void initView(){
@@ -157,6 +159,14 @@ public class MainActivity extends Activity {
                 .build();
         manager.notify(id,notification);
 
+    }
+
+    private void initString(){
+        SharedPreferences sp= getApplicationContext().getSharedPreferences("study", Context.MODE_PRIVATE);
+        String str=sp.getString("str","");
+        if(!str.equals("")){
+            EncourageContent.setSaveStr(str);
+        }
     }
 
     private void beginTime(){
