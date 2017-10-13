@@ -31,11 +31,11 @@ public class RemindService extends Service {
                 while (true){
                     Date date=new Date();
                     int hours=date.getHours();
-                    if(hours>=7&&hours<=21){
-                        myNotify(encourageContent.getNextContent(),hours);
+                    if(hours>=7&&hours<=23){
+                        myNotify(encourageContent.getRandomContent(),hours);
                     }
                     try {
-                        sleep(60*m);
+                        sleep(30*m);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -59,7 +59,7 @@ public class RemindService extends Service {
         Notification notification = builder
 
                 .setContentTitle(content)
-                .setContentText("自强不息，厚德载物")
+                .setContentText(EncourageContent.getRandomContent())
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())

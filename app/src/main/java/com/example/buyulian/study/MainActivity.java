@@ -150,7 +150,7 @@ public class MainActivity extends Activity {
         Notification notification = builder
 
                 .setContentTitle(content)
-                .setContentText("自强不息，厚德载物")
+                .setContentText(EncourageContent.getRandomContent())
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
@@ -173,9 +173,13 @@ public class MainActivity extends Activity {
         EncourageContent encourageContent=new EncourageContent();
         long beginMill=new Date().getTime();
         boolean change=false;
+        int maxD=encourageContent.gapTime[encourageContent.gapTime.length-1];
         while (!isFinished){
             long nowWill=new Date().getTime();
             int DValue=(int)(nowWill-beginMill)/1000;
+            if(DValue-limitTime>maxD){
+                return;
+            }
             if(!change){
                 if(DValue>limitTime){
                     change=true;
