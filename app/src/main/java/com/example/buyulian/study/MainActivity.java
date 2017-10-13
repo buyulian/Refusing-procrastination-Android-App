@@ -154,7 +154,7 @@ public class MainActivity extends Activity {
                     change=true;
                 }
             }else{
-                if(DValue%20==0){
+                if(encourageContent.isRemind(DValue-limitTime)){
                     String content=encourageContent.getNextContent();
                     myNotify(content,DValue/20);
                 }

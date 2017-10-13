@@ -11,11 +11,21 @@ public class EncourageContent {
             "今日之辱，我不想再受第二次",
             "上火，感冒，不锻炼的后果就是前车之鉴"
     };
+    private int[] gapTime=new int[]{0,20,40,60,120,180,300,600,1200,1800,3600};
     private int cursor=0;
 
     public String getNextContent() {
         String rs=content[cursor%content.length];
         cursor++;
         return rs;
+    }
+
+    public boolean isRemind(int miller){
+        for(int i=0;i<gapTime.length;i++){
+            if(gapTime[i]==miller){
+                return true;
+            }
+        }
+        return false;
     }
 }
