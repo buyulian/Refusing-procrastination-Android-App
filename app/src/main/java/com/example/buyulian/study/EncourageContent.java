@@ -1,7 +1,7 @@
 package com.example.buyulian.study;
 
-public interface Constants {
-    String[] content={
+public class EncourageContent {
+    private String[] content={
             "拖一秒无尽深渊",
             "不努力你拿什么和别人比",
             "你不努力，你的女神就要嫁给别人了",
@@ -11,4 +11,11 @@ public interface Constants {
             "今日之辱，我不想再受第二次",
             "上火，感冒，不锻炼的后果就是前车之鉴"
     };
+    private int cursor=0;
+
+    public String getNextContent() {
+        String rs=content[cursor%content.length];
+        cursor++;
+        return rs;
+    }
 }

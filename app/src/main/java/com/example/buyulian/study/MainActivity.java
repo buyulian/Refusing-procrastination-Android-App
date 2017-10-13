@@ -3,7 +3,6 @@ package com.example.buyulian.study;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,12 +15,15 @@ import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Date;
+
 public class MainActivity extends Activity {
     private Button button;
     private Button buttonExit;
     private EditText editText;
     private Chronometer chronometer;
     private Intent intent;
+    private boolean isFinished=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +37,18 @@ public class MainActivity extends Activity {
         button=findViewById(R.id.button);
         buttonExit=findViewById(R.id.buttonExit);
         chronometer=findViewById(R.id.chronometer);
-        intent=new Intent(this,TimeService.class);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chronometer.setBase(SystemClock.elapsedRealtime());
                 chronometer.start();
-                startService(intent);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        beginTime();
+                    }
+                }).start();
             }
         });
 
@@ -54,12 +60,13 @@ public class MainActivity extends Activity {
         });
 
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            EncourageContent encourageContent=new EncourageContent();
             @Override
             public void onChronometerTick(Chronometer chronometer) {
                 String text=chronometer.getText().toString();
                 int s=Integer.parseInt(text.replace(':','0'));
                 if(s%20==0){
-                    String content=Constants.content[s/20%Constants.content.length];
+                    String content= encourageContent.getNextContent();
                     Toast.makeText(MainActivity.this,content,Toast.LENGTH_SHORT).show();
                 }
             }
@@ -68,7 +75,7 @@ public class MainActivity extends Activity {
     }
 
     private void exit(){
-        stopService(intent);
+        isFinished=true;
         this.finish();
     }
 
@@ -80,5 +87,46 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    void myNotify(String content,int id){
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+        Notification notification = builder
+
+                .setContentTitle(content)
+
+                .setContentText("Now 马上去做")
+
+                .setWhen(System.currentTimeMillis())
+
+                .setSmallIcon(R.mipmap.ic_launcher_now)
+
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_now))
+
+                .build();
+        manager.notify(id,notification);
+
+    }
+
+    private void beginTime(){
+        EncourageContent encourageContent=new EncourageContent();
+        long beginMill=new Date().getTime();
+        while (!isFinished){
+            long nowWill=new Date().getTime();
+            int DValue=(int)(nowWill-beginMill)/1000;
+            if(DValue%20==0){
+                String content=encourageContent.getNextContent();
+                myNotify(content,DValue/20);
+            }
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
