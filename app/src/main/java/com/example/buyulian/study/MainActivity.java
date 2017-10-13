@@ -3,6 +3,7 @@ package com.example.buyulian.study;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -143,19 +144,18 @@ public class MainActivity extends Activity {
     void myNotify(String content,int id){
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification notification = builder
 
                 .setContentTitle(content)
-
-                .setContentText("Now 马上去做")
-
+                .setContentText("自强不息，厚德载物")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
-
                 .setSmallIcon(R.mipmap.ic_launcher_now)
-
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_now))
-
                 .build();
         manager.notify(id,notification);
 

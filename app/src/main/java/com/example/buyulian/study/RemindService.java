@@ -2,6 +2,7 @@ package com.example.buyulian.study;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -19,9 +20,9 @@ public class RemindService extends Service {
         return null;
     }
 
-    //Service被启动时调用
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public void onCreate() {
+        super.onCreate();
         new Thread(new Runnable() {
             EncourageContent encourageContent=new EncourageContent();
             @Override
@@ -41,25 +42,29 @@ public class RemindService extends Service {
                 }
             }
         }).start();
+    }
+
+    //Service被启动时调用
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
     }
 
     void myNotify(String content,int id){
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification notification = builder
 
                 .setContentTitle(content)
-
-                .setContentText("Now 马上去做")
-
+                .setContentText("自强不息，厚德载物")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
-
                 .setSmallIcon(R.mipmap.ic_launcher_now)
-
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_now))
-
                 .build();
         manager.notify(id,notification);
 
