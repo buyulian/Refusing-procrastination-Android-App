@@ -13,20 +13,20 @@
             android:textSize="36sp"
             android:layout_height="80sp"
             android:textColor="#ff0000"
-            android:background="#0000ff"
+            android:background="#6699ff"
             android:gravity="center" android:id="@+id/textView"/>
     <Spinner
             android:id="@+id/spinner1"
             android:layout_width="match_parent"
             android:layout_height="80sp"
-            android:background="#006688"
+            android:background="#99ffff"
             android:entries="@array/spinner"/>
 
     <Chronometer
             android:id="@+id/chronometer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#99ffff"
+            android:background="#66ffbb"
             android:gravity="center"
             android:textSize="60sp" />
 
@@ -42,6 +42,14 @@
             android:text="@string/button_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/buttonEdit"/>
+    <Button
+            android:text="@string/next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/buttonNext"/>
+    <Button
+            android:text="@string/random_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/buttonRandomNext"/>
 
 
 </LinearLayout>

@@ -1,5 +1,8 @@
 package com.example.buyulian.study;
 
+import android.content.Context;
+
+import java.util.Arrays;
 import java.util.Random;
 
 public class EncourageContent {
@@ -58,6 +61,7 @@ public class EncourageContent {
             "学习编程写小说比游戏好玩",
             "无聊时想想还有很多有趣的事没做"
     };
+    private static String[] content2=content;
     static String endStr=";";
     public int[] gapTime=new int[]{0,20,40,60,120,180,300,600,1200,1800,3600};
     private int cursor=0;
@@ -66,6 +70,10 @@ public class EncourageContent {
         String rs=content[cursor%content.length];
         cursor++;
         return rs;
+    }
+
+    public static void reset(){
+        content=Arrays.copyOf(content2,content2.length);
     }
 
     public static String getRandomContent(){

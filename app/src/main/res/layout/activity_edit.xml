@@ -2,22 +2,16 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="#99ff66"
               android:gravity="center_horizontal"
               android:orientation="vertical">
-
-
-    <TextView
-            android:text="@string/text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textColor="#ff0000"
-            android:gravity="center" android:id="@+id/textView"/>
 
     <EditText android:layout_width="match_parent"
               android:id="@+id/content_edit"
               android:textSize="14sp"
-              android:text="@string/item_end"
+              android:minLines="16"
+              android:maxLines="30"
+              android:background="#99ffff"
               android:layout_height="wrap_content"/>
     <Button
             android:text="@string/save"
@@ -27,6 +21,10 @@
             android:text="@string/button_exit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/buttonExit2"/>
+    <Button
+            android:text="@string/reset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/buttonReset"/>
 
 
 </LinearLayout>
