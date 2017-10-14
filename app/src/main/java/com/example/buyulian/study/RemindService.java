@@ -14,6 +14,7 @@ import java.util.Date;
 import static java.lang.Thread.sleep;
 
 public class RemindService extends Service {
+    ScreenListener listener;
     //必须要实现的方法
     @Override
     public IBinder onBind(Intent intent) {
@@ -23,21 +24,31 @@ public class RemindService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        listener =new ScreenListener(this);
+        listener.register(new ScreenListener.ScreenStateListener() {
+            @Override
+            public void onScreenOn() {
+                GlobalVariable.isUnlockOn =1;
+            }
+
+            @Override
+            public void onScreenOff() {
+
+            }
+
+            @Override
+            public void onUserPresent() {
+                GlobalVariable.isUnlockOn =0;
+            }
+        });
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int sleepTime=60*60*1000;
-                int realCount=0;
-                long beginTime=new Date().getTime();
+                int sleepTime=20*60*1000;
                 while (true){
-                    Date date=new Date();
-                    long nowTime=date.getTime();
-                    myNotify(EncourageContent.getRandomContent(),GlobalVariable.notifyCount++);
-                    realCount++;
-                    long shouldCount=(nowTime-beginTime)/(sleepTime)+1;
-                    while (realCount<shouldCount){
+                    if(GlobalVariable.isUnlockOn==1){
                         myNotify(EncourageContent.getRandomContent(),GlobalVariable.notifyCount++);
-                        realCount++;
                     }
                     try {
                         sleep(sleepTime);
@@ -53,6 +64,15 @@ public class RemindService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        if (listener != null) {
+            listener.unregister();
+        }
+        super.onDestroy();
     }
 
     void myNotify(String content,int id){
