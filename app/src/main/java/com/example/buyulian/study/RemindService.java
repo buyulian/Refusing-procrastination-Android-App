@@ -24,7 +24,6 @@ public class RemindService extends Service {
     public void onCreate() {
         super.onCreate();
         new Thread(new Runnable() {
-            EncourageContent encourageContent=new EncourageContent();
             @Override
             public void run() {
                 int m=60*1000;
@@ -32,10 +31,10 @@ public class RemindService extends Service {
                     Date date=new Date();
                     int hours=date.getHours();
                     if(hours>=7&&hours<=23){
-                        myNotify(encourageContent.getRandomContent(),hours);
+                        myNotify(EncourageContent.getRandomContent(),GlobalVariable.notifyCount++);
                     }
                     try {
-                        sleep(30*m);
+                        sleep(5*m);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
@@ -32,13 +33,13 @@ public class MainActivity extends Activity {
     private Intent intentEdit;
     private boolean isFinished=false;
     private int limitTime=180;
-    int seconds=0;
     boolean change=false;
 
     final Handler handler=new Handler(){
         private boolean t=true;
         @Override
         public void handleMessage(Message msg) {
+            int seconds=msg.what;
             if(change){
                 if(t){
                     chronometer.setTextColor(0xffff0000);
@@ -73,7 +74,7 @@ public class MainActivity extends Activity {
 
         startService(intent);
 
-        chronometer.setText(intToTime(seconds));
+        chronometer.setText(intToTime(0));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -208,8 +209,7 @@ public class MainActivity extends Activity {
         while (!isFinished){
             long nowWill=new Date().getTime();
             int DValue=(int)(nowWill-beginMill)/1000;
-            seconds=DValue;
-            handler.sendEmptyMessage(0);
+            handler.sendEmptyMessage(DValue);
             if(DValue-limitTime>maxD){
                 return;
             }
@@ -220,11 +220,11 @@ public class MainActivity extends Activity {
             }else{
                 if(encourageContent.isRemind(DValue-limitTime)){
                     String content=encourageContent.getNextContent();
-                    myNotify(content,DValue/20);
+                    myNotify(content,GlobalVariable.notifyCount++);
                 }
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
