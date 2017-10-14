@@ -34,7 +34,7 @@ public class RemindService extends Service {
                         myNotify(EncourageContent.getRandomContent(),GlobalVariable.notifyCount++);
                     }
                     try {
-                        sleep(5*m);
+                        sleep(30*m);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
