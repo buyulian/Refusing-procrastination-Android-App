@@ -63,7 +63,7 @@ public class EncourageContent {
     };
     private static String[] content2=content;
     static String endStr=";";
-    public int[] gapTime=new int[]{0,20,40,60,120,180,300,600,1200,1800,3600};
+    public static int[] gapTime=new int[]{3,20,40,60,120,180,300,600,1200,1800,3600};
     private int cursor=0;
 
     public String getNextContent() {
@@ -89,6 +89,14 @@ public class EncourageContent {
             }
         }
         return false;
+    }
+
+    public static int getTimes(int miller){
+        int ct=0;
+        while (gapTime[ct]<=miller){
+            ct++;
+        }
+        return ct;
     }
 
     public static String getSaveStr(){

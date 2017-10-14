@@ -26,15 +26,21 @@ public class RemindService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int m=60*1000;
+                int sleepTime=60*60*1000;
+                int realCount=0;
+                long beginTime=new Date().getTime();
                 while (true){
                     Date date=new Date();
-                    int hours=date.getHours();
-                    if(hours>=7&&hours<=23){
+                    long nowTime=date.getTime();
+                    myNotify(EncourageContent.getRandomContent(),GlobalVariable.notifyCount++);
+                    realCount++;
+                    long shouldCount=(nowTime-beginTime)/(sleepTime)+1;
+                    while (realCount<shouldCount){
                         myNotify(EncourageContent.getRandomContent(),GlobalVariable.notifyCount++);
+                        realCount++;
                     }
                     try {
-                        sleep(30*m);
+                        sleep(sleepTime);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

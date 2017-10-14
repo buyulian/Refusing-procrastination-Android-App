@@ -7,14 +7,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
@@ -205,7 +202,8 @@ public class MainActivity extends Activity {
     private void beginTime(){
         EncourageContent encourageContent=new EncourageContent();
         long beginMill=new Date().getTime();
-        int maxD=encourageContent.gapTime[encourageContent.gapTime.length-1];
+        int maxD=EncourageContent.gapTime[EncourageContent.gapTime.length-1];
+        int realCount=0;
         while (!isFinished){
             long nowWill=new Date().getTime();
             int DValue=(int)(nowWill-beginMill)/1000;
@@ -221,6 +219,13 @@ public class MainActivity extends Activity {
                 if(encourageContent.isRemind(DValue-limitTime)){
                     String content=encourageContent.getNextContent();
                     myNotify(content,GlobalVariable.notifyCount++);
+                    realCount++;
+                }
+                int shouldCount=EncourageContent.getTimes(DValue);
+                while (realCount<shouldCount){
+                    String content=encourageContent.getNextContent();
+                    myNotify(content,GlobalVariable.notifyCount++);
+                    realCount++;
                 }
             }
             try {
