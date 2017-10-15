@@ -171,7 +171,7 @@ public class MainActivity extends Activity {
     }
 
 
-    void myNotify(String content,int id){
+    void myNotify(String content,int id,int superTime,long millisTime){
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         Intent intent = new Intent(this, MainActivity.class);
@@ -179,11 +179,11 @@ public class MainActivity extends Activity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification notification = builder
 
-                .setContentTitle(content)
-                .setContentText(EncourageContent.getRandomContent())
+                .setContentTitle("你已拖延 "+superTime+" 秒")
+                .setContentText(content)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
-                .setWhen(System.currentTimeMillis())
+                .setWhen(millisTime)
                 .setSmallIcon(R.mipmap.ic_launcher_now)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_now))
                 .build();
@@ -201,11 +201,11 @@ public class MainActivity extends Activity {
 
     private void beginTime(){
         EncourageContent encourageContent=new EncourageContent();
-        long beginMill=new Date().getTime();
+        long beginMill=System.currentTimeMillis();
         int maxD=EncourageContent.gapTime[EncourageContent.gapTime.length-1];
         int realCount=0;
         while (!isFinished){
-            long nowWill=new Date().getTime();
+            long nowWill=System.currentTimeMillis();
             int DValue=(int)(nowWill-beginMill)/1000;
             handler.sendEmptyMessage(DValue);
             if(DValue-limitTime>maxD){
@@ -216,15 +216,18 @@ public class MainActivity extends Activity {
                     change=true;
                 }
             }else{
-                if(encourageContent.isRemind(DValue-limitTime)){
+                int superTime=DValue-limitTime;
+                if(encourageContent.isRemind(superTime)){
                     String content=encourageContent.getNextContent();
-                    myNotify(content,GlobalVariable.notifyCount++);
+                    myNotify(content,GlobalVariable.notifyCount++,superTime,nowWill);
                     realCount++;
                 }
-                int shouldCount=EncourageContent.getTimes(DValue);
+                int shouldCount=EncourageContent.getTimes(superTime);
                 while (realCount<shouldCount){
                     String content=encourageContent.getNextContent();
-                    myNotify(content,GlobalVariable.notifyCount++);
+                    int shTime=EncourageContent.gapTime[realCount];
+                    long realTime=beginMill+shTime*1000;
+                    myNotify(content,GlobalVariable.notifyCount++,shTime,realTime);
                     realCount++;
                 }
             }

@@ -46,10 +46,16 @@ public class RemindService extends Service {
             @Override
             public void run() {
                 int sleepTime=20*60*1000;
+                int realCount=0;
+                int shCount=1;
                 while (true){
                     if(GlobalVariable.isUnlockOn==1){
-                        myNotify(EncourageContent.getRandomContent(),GlobalVariable.notifyCount++);
+                        while (realCount<shCount){
+                            myNotify(EncourageContent.getRandomContent(),GlobalVariable.notifyCount++);
+                            realCount++;
+                        }
                     }
+                    shCount++;
                     try {
                         sleep(sleepTime);
                     } catch (InterruptedException e) {
