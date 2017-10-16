@@ -26,11 +26,19 @@ public class MainActivity extends Activity {
     private Button buttonRandomNext;
     private Spinner spinner;
     private TextView chronometer;
+    private TextView dayUsedTime;
     private Intent intent;
     private Intent intentEdit;
     private boolean isFinished=false;
     private int limitTime=180;
     boolean change=false;
+
+    public Handler handler2=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            dayUsedTime.setText(intToTime(msg.what));
+        }
+    };
 
     final Handler handler=new Handler(){
         private boolean t=true;
@@ -65,13 +73,16 @@ public class MainActivity extends Activity {
         buttonRandomNext=findViewById(R.id.buttonRandomNext);
         spinner=findViewById(R.id.spinner1);
         chronometer=findViewById(R.id.chronometer);
+        dayUsedTime=findViewById(R.id.dayUsedTime);
         intent=new Intent(this,RemindService.class);
         intentEdit=new Intent(this,EditActivity.class);
 
+        GlobalVariable.handlerDay=handler2;
 
         startService(intent);
 
         chronometer.setText(intToTime(0));
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 

@@ -69,15 +69,17 @@ public class RemindService extends Service {
                 int gapTime=20;
                 int sleepTime=gapTime*60*1000;
                 int realCount=0;
-                int shCount=1;
+                int shCount=0;
                 while (true){
+                    int msg=shCount*gapTime;
+                    GlobalVariable.handlerDay.sendEmptyMessage(msg);
+                    shCount++;
                     if(GlobalVariable.isUnlockOn==1){
                         while (realCount<shCount){
                             myNotify("今天都玩手机 "+realCount*gapTime+" 分钟啦，玩物丧志",GlobalVariable.notifyCount++);
                             realCount++;
                         }
                     }
-                    shCount++;
                     try {
                         sleep(sleepTime);
                     } catch (InterruptedException e) {

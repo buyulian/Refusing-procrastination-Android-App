@@ -53,4 +53,14 @@
             android:layout_height="wrap_content" android:id="@+id/buttonRandomNext"/>
 
 
+    <TextView
+            android:id="@+id/dayUsedTime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#66ffbb"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:textSize="60sp" />
+
+
 </LinearLayout>
