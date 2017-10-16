@@ -16,18 +16,20 @@ import java.util.Timer;
 import static java.lang.Thread.sleep;
 
 public class RemindService extends Service {
-    ScreenListener listener;
-    Thread singleTime=new Thread(new Runnable() {
+    private ScreenListener listener;
+    private long lockTime=0;
+    private long minTimeGap=5*60*1000;
+    private Thread singleTime=new Thread(new Runnable() {
         @Override
         public void run() {
             int gapTime=10;
             int sleepTime=gapTime*60*1000;
             int ct=1;
-            while (GlobalVariable.isUnlockOn==1){
+            while (true){
                 try {
                     sleep(sleepTime);
                 } catch (InterruptedException e) {
-                    return;
+                    continue;
                 }
                 String title="你已连续玩手机 "+ct*gapTime+" 分钟,快去学习吧";
                 myNotify(title,GlobalVariable.notifyCount++);
@@ -53,13 +55,16 @@ public class RemindService extends Service {
             @Override
             public void onScreenOff() {
                 GlobalVariable.isUnlockOn =0;
-                singleTime.interrupt();
+                lockTime=System.currentTimeMillis();
             }
 
             @Override
             public void onUserPresent() {
                 GlobalVariable.isUnlockOn =1;
-                singleTime.start();
+                long local=System.currentTimeMillis();
+                if(local-lockTime>minTimeGap){
+                    singleTime.interrupt();
+                }
             }
         });
 
@@ -88,6 +93,7 @@ public class RemindService extends Service {
                 }
             }
         }).start();
+        singleTime.start();
     }
 
     //Service被启动时调用
