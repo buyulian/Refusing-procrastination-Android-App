@@ -8,13 +8,33 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 
 import java.util.Date;
+import java.util.Timer;
 
 import static java.lang.Thread.sleep;
 
 public class RemindService extends Service {
     ScreenListener listener;
+    Thread singleTime=new Thread(new Runnable() {
+        @Override
+        public void run() {
+            int gapTime=10;
+            int sleepTime=gapTime*60*1000;
+            int ct=1;
+            while (GlobalVariable.isUnlockOn==1){
+                try {
+                    sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    return;
+                }
+                String title="你已连续玩手机 "+ct*gapTime+" 分钟,快去学习";
+                myNotify(title,GlobalVariable.notifyCount++);
+                ct++;
+            }
+        }
+    });
     //必须要实现的方法
     @Override
     public IBinder onBind(Intent intent) {
@@ -28,30 +48,32 @@ public class RemindService extends Service {
         listener.register(new ScreenListener.ScreenStateListener() {
             @Override
             public void onScreenOn() {
-                GlobalVariable.isUnlockOn =1;
             }
 
             @Override
             public void onScreenOff() {
-
+                GlobalVariable.isUnlockOn =0;
+                singleTime.interrupt();
             }
 
             @Override
             public void onUserPresent() {
-                GlobalVariable.isUnlockOn =0;
+                GlobalVariable.isUnlockOn =1;
+                singleTime.start();
             }
         });
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int sleepTime=20*60*1000;
+                int gapTime=20;
+                int sleepTime=gapTime*60*1000;
                 int realCount=0;
                 int shCount=1;
                 while (true){
                     if(GlobalVariable.isUnlockOn==1){
                         while (realCount<shCount){
-                            myNotify(GlobalVariable.notifyCount++);
+                            myNotify("今天都玩手机 "+realCount*gapTime+" 分钟啦，玩物丧志",GlobalVariable.notifyCount++);
                             realCount++;
                         }
                     }
@@ -81,7 +103,9 @@ public class RemindService extends Service {
         super.onDestroy();
     }
 
-    void myNotify(int id){
+
+
+    void myNotify(String title,int id){
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         Intent intent = new Intent(this, MainActivity.class);
@@ -89,7 +113,7 @@ public class RemindService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification notification = builder
 
-                .setContentTitle("别玩手机啦，玩物丧志")
+                .setContentTitle(title)
                 .setContentText(EncourageContent.getRandomContent())
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
