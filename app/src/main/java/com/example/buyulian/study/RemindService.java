@@ -29,6 +29,7 @@ public class RemindService extends Service {
                 try {
                     sleep(sleepTime);
                 } catch (InterruptedException e) {
+                    ct=1;
                     continue;
                 }
                 String title="你已连续玩手机 "+ct*gapTime+" 分钟,快去学习吧";
