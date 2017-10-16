@@ -29,7 +29,7 @@ public class RemindService extends Service {
                 } catch (InterruptedException e) {
                     return;
                 }
-                String title="你已连续玩手机 "+ct*gapTime+" 分钟,快去学习";
+                String title="你已连续玩手机 "+ct*gapTime+" 分钟,快去学习吧";
                 myNotify(title,GlobalVariable.notifyCount++);
                 ct++;
             }
@@ -76,7 +76,7 @@ public class RemindService extends Service {
                     shCount++;
                     if(GlobalVariable.isUnlockOn==1){
                         while (realCount<shCount){
-                            myNotify("今天都玩手机 "+realCount*gapTime+" 分钟啦，玩物丧志",GlobalVariable.notifyCount++);
+                            myNotify("今天已玩手机 "+realCount*gapTime+" 分钟，当心玩物丧志",GlobalVariable.notifyCount++);
                             realCount++;
                         }
                     }
