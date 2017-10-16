@@ -51,7 +51,7 @@ public class RemindService extends Service {
                 while (true){
                     if(GlobalVariable.isUnlockOn==1){
                         while (realCount<shCount){
-                            myNotify(EncourageContent.getRandomContent(),GlobalVariable.notifyCount++);
+                            myNotify(GlobalVariable.notifyCount++);
                             realCount++;
                         }
                     }
@@ -81,7 +81,7 @@ public class RemindService extends Service {
         super.onDestroy();
     }
 
-    void myNotify(String content,int id){
+    void myNotify(int id){
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         Intent intent = new Intent(this, MainActivity.class);
@@ -89,7 +89,7 @@ public class RemindService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification notification = builder
 
-                .setContentTitle(content)
+                .setContentTitle("别玩手机啦，玩物丧志")
                 .setContentText(EncourageContent.getRandomContent())
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
