@@ -18,7 +18,7 @@
     <Spinner
             android:id="@+id/spinner1"
             android:layout_width="match_parent"
-            android:layout_height="80sp"
+            android:layout_height="60sp"
             android:background="#99ffff"
             android:entries="@array/spinner"/>
 

@@ -72,7 +72,7 @@ public class RemindService extends Service {
                 int shCount=0;
                 while (true){
                     int msg=shCount*gapTime;
-                    GlobalVariable.handlerDay.sendEmptyMessage(msg);
+                    GlobalVariable.dayUsedTime=msg;
                     shCount++;
                     if(GlobalVariable.isUnlockOn==1){
                         while (realCount<shCount){

@@ -33,13 +33,6 @@ public class MainActivity extends Activity {
     private int limitTime=180;
     boolean change=false;
 
-    public Handler handler2=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            dayUsedTime.setText(intToTime(msg.what));
-        }
-    };
-
     final Handler handler=new Handler(){
         private boolean t=true;
         @Override
@@ -65,6 +58,12 @@ public class MainActivity extends Activity {
         initString();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        dayUsedTime.setText(String.valueOf(GlobalVariable.dayUsedTime));
+    }
+
     private void initView(){
         button=findViewById(R.id.button);
         buttonExit=findViewById(R.id.buttonExit);
@@ -77,11 +76,10 @@ public class MainActivity extends Activity {
         intent=new Intent(this,RemindService.class);
         intentEdit=new Intent(this,EditActivity.class);
 
-        GlobalVariable.handlerDay=handler2;
-
         startService(intent);
 
         chronometer.setText(intToTime(0));
+        dayUsedTime.setText(String.valueOf(GlobalVariable.dayUsedTime));
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
