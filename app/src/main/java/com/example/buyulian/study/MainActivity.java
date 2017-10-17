@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
     private boolean isFinished=false;
     private int limitTime=180;
     boolean change=false;
+    private Thread thread;
 
     final Handler handler=new Handler(){
         private boolean t=true;
@@ -156,16 +157,22 @@ public class MainActivity extends Activity {
     }
 
     private void encourageBegin(){
-        new Thread(new Runnable() {
+        thread=new Thread(new Runnable() {
             @Override
             public void run() {
                 beginTime();
             }
-        }).start();
+        });
+        thread.start();
     }
 
     private void exit(){
         isFinished=true;
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         this.finish();
     }
 

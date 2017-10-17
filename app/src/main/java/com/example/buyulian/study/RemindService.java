@@ -10,15 +10,13 @@ import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+
 import java.util.Date;
-import java.util.Timer;
 
 import static java.lang.Thread.sleep;
 
 public class RemindService extends Service {
     private ScreenListener listener;
-    private long lockTime=0;
-    private long minTimeGap=5*60*1000;
     private Thread singleTime=new Thread(new Runnable() {
         @Override
         public void run() {
@@ -28,13 +26,12 @@ public class RemindService extends Service {
             while (true){
                 try {
                     sleep(sleepTime);
+                    String title="你已连续玩手机 "+ct*gapTime+" 分钟,快去学习吧";
+                    myNotify(title,GlobalVariable.notifyCount++);
+                    ct++;
                 } catch (InterruptedException e) {
                     ct=1;
-                    continue;
                 }
-                String title="你已连续玩手机 "+ct*gapTime+" 分钟,快去学习吧";
-                myNotify(title,GlobalVariable.notifyCount++);
-                ct++;
             }
         }
     });
@@ -49,6 +46,14 @@ public class RemindService extends Service {
         super.onCreate();
         listener =new ScreenListener(this);
         listener.register(new ScreenListener.ScreenStateListener() {
+
+            private long lockTime=System.currentTimeMillis();
+            private long unlockTime=lockTime;
+            private long lastLockTime=lockTime;
+            private long lastUnlockTime=lockTime;
+            private long minTimeGap=5*60*1000;
+            private long minOnTimeGap=60*1000;
+
             @Override
             public void onScreenOn() {
             }
@@ -56,7 +61,13 @@ public class RemindService extends Service {
             @Override
             public void onScreenOff() {
                 GlobalVariable.isUnlockOn =0;
-                lockTime=System.currentTimeMillis();
+                long local=System.currentTimeMillis();
+                if(local-unlockTime>minOnTimeGap){
+                    lastLockTime=lockTime;
+                    lockTime=local;
+                }else{
+                    unlockTime=lastUnlockTime;
+                }
             }
 
             @Override
@@ -65,27 +76,30 @@ public class RemindService extends Service {
                 long local=System.currentTimeMillis();
                 if(local-lockTime>minTimeGap){
                     singleTime.interrupt();
+                    lastUnlockTime=unlockTime;
+                    unlockTime=local;
                 }
             }
         });
 
-        new Thread(new Runnable() {
+        Thread thread=new Thread(){
             @Override
             public void run() {
                 int gapTime=20;
                 int sleepTime=gapTime*60*1000;
-                int realCount=0;
-                int shCount=0;
+                int ct=0;
+                Date lastTime=new Date();
+                int lastHours=lastTime.getHours();
                 while (true){
-                    int msg=shCount*gapTime;
-                    GlobalVariable.dayUsedTime=msg;
-                    shCount++;
-                    if(GlobalVariable.isUnlockOn==1){
-                        while (realCount<shCount){
-                            myNotify("今天已玩手机 "+realCount*gapTime+" 分钟，当心玩物丧志",GlobalVariable.notifyCount++);
-                            realCount++;
-                        }
+                    int nowHours=new Date().getHours();
+                    if(nowHours<lastHours){
+                        lastHours=nowHours;
+                        ct=0;
                     }
+                    int msg=ct*gapTime;
+                    GlobalVariable.dayUsedTime=msg;
+                    myNotify("今天已玩手机 "+ct*gapTime+" 分钟，当心玩物丧志",GlobalVariable.notifyCount++);
+                    ct++;
                     try {
                         sleep(sleepTime);
                     } catch (InterruptedException e) {
@@ -93,7 +107,8 @@ public class RemindService extends Service {
                     }
                 }
             }
-        }).start();
+        };
+        thread.start();
         singleTime.start();
     }
 
