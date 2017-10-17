@@ -59,7 +59,8 @@ public class EncourageContent {
             "运动可以防止很多大病小病",
             "该学时尽情学，该玩时尽情玩",
             "学习编程写小说比游戏好玩",
-            "无聊时想想还有很多有趣的事没做"
+            "无聊时想想还有很多有趣的事没做",
+            "要计算利弊，不要因小失大"
     };
     private static String[] content2=content;
     static String endStr=";";

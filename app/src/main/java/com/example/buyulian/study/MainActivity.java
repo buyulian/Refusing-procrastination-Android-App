@@ -210,7 +210,7 @@ public class MainActivity extends Activity {
     private void initString(){
         SharedPreferences sp= getApplicationContext().getSharedPreferences("study", Context.MODE_PRIVATE);
         String str=sp.getString("str","");
-        if(!str.equals("")){
+        if(!"".equals(str)){
             EncourageContent.setSaveStr(str);
         }
     }
@@ -222,17 +222,17 @@ public class MainActivity extends Activity {
         int realCount=0;
         while (!isFinished){
             long nowWill=System.currentTimeMillis();
-            int DValue=(int)(nowWill-beginMill)/1000;
-            handler.sendEmptyMessage(DValue);
-            if(DValue-limitTime>maxD){
+            int dValue=(int)(nowWill-beginMill)/1000;
+            handler.sendEmptyMessage(dValue);
+            if(dValue-limitTime>maxD){
                 return;
             }
             if(!change){
-                if(DValue>limitTime){
+                if(dValue>limitTime){
                     change=true;
                 }
             }else{
-                int superTime=DValue-limitTime;
+                int superTime=dValue-limitTime;
                 if(encourageContent.isRemind(superTime)){
                     String content=encourageContent.getNextContent();
                     myNotify(content,GlobalVariable.notifyCount++,superTime,nowWill);

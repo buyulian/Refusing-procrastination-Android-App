@@ -17,6 +17,9 @@ import static java.lang.Thread.sleep;
 
 public class RemindService extends Service {
     private ScreenListener listener;
+    private long totalTime=0;
+    private long oneTime=0;
+
     private Thread singleTime=new Thread(new Runnable() {
         @Override
         public void run() {
