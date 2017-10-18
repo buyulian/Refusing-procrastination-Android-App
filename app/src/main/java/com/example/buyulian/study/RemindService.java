@@ -12,30 +12,46 @@ import android.util.Log;
 
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.*;
 
 import static java.lang.Thread.sleep;
 
 public class RemindService extends Service {
     private ScreenListener listener;
-    private long totalTime=0;
-    private long oneTime=0;
+    private final Lock lockOne =new ReentrantLock();
+    private final Lock lockAll =new ReentrantLock();
+    private final Condition conditionOne= lockOne.newCondition();
+    private final Condition conditionAll= lockAll.newCondition();
 
     private Thread singleTime=new Thread(new Runnable() {
         @Override
         public void run() {
             int gapTime=10;
             int sleepTime=gapTime*60*1000;
-            int ct=1;
+            long ct=0;
+            long realCount=0;
+            long remainder=0;
+            lockOne.lock();
             while (true){
+                long nextTime=(ct+1)*sleepTime;
+                long local=System.currentTimeMillis();
+                long andTime=GlobalVariable.oneTime+local-GlobalVariable.unlockTime;
+                remainder=nextTime-andTime;
                 try {
-                    sleep(sleepTime);
-                    String title="你已连续玩手机 "+ct*gapTime+" 分钟,快去学习吧";
-                    myNotify(title,GlobalVariable.notifyCount++);
-                    ct++;
+                    while (remainder>0){
+                        conditionOne.await(remainder+1000,TimeUnit.MILLISECONDS);
+                        local=System.currentTimeMillis();
+                        andTime=GlobalVariable.oneTime+local-GlobalVariable.unlockTime;
+                        remainder=nextTime-andTime;
+                    }
                 } catch (InterruptedException e) {
-                    ct=1;
                 }
+                String title="你已连续玩手机 "+(ct+1)*gapTime+" 分钟,快去学习吧";
+                myNotify(title,GlobalVariable.notifyCount++);
+                ct++;
             }
+
         }
     });
     //必须要实现的方法
@@ -47,41 +63,53 @@ public class RemindService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        listener =new ScreenListener(this);
-        listener.register(new ScreenListener.ScreenStateListener() {
+        init();
+    }
 
-            private long lockTime=System.currentTimeMillis();
-            private long unlockTime=lockTime;
-            private long lastLockTime=lockTime;
-            private long lastUnlockTime=lockTime;
-            private long minTimeGap=5*60*1000;
-            private long minOnTimeGap=60*1000;
+    private void init(){
+
+        listener =new ScreenListener(this);
+        long local=System.currentTimeMillis();
+        GlobalVariable.unlockTime=local;
+        GlobalVariable.lockTime=local;
+        GlobalVariable.validLockTime=local;
+        GlobalVariable.validUnlockTime=local;
+
+
+        listener.register(new ScreenListener.ScreenStateListener() {
 
             @Override
             public void onScreenOn() {
+                GlobalVariable.isUnlockOn =1;
+                long local=System.currentTimeMillis();
+                if(local-GlobalVariable.validLockTime>Constants.MIN_TIME_GAP){
+                    GlobalVariable.oneTime=0;
+                    GlobalVariable.validUnlockTime =local;
+                }
+                GlobalVariable.unlockTime=local;
+                lockAll.unlock();
+                lockOne.unlock();
+                Log.d("on","on");
             }
 
             @Override
             public void onScreenOff() {
+                lockOne.lock();
+                lockAll.lock();
+                Log.d("off","off");
                 GlobalVariable.isUnlockOn =0;
                 long local=System.currentTimeMillis();
-                if(local-unlockTime>minOnTimeGap){
-                    lastLockTime=lockTime;
-                    lockTime=local;
-                }else{
-                    unlockTime=lastUnlockTime;
+                long theta=local-GlobalVariable.unlockTime;
+                if(theta>Constants.MIN_ON_TIME_GAP){
+                    GlobalVariable.totalTime+=theta;
+                    GlobalVariable.oneTime+=theta;
+                    GlobalVariable.validLockTime =local;
                 }
+                GlobalVariable.lockTime=local;
             }
 
             @Override
             public void onUserPresent() {
-                GlobalVariable.isUnlockOn =1;
-                long local=System.currentTimeMillis();
-                if(local-lockTime>minTimeGap){
-                    singleTime.interrupt();
-                    lastUnlockTime=unlockTime;
-                    unlockTime=local;
-                }
             }
         });
 
@@ -90,24 +118,35 @@ public class RemindService extends Service {
             public void run() {
                 int gapTime=20;
                 int sleepTime=gapTime*60*1000;
-                int ct=0;
-                Date lastTime=new Date();
-                int lastHours=lastTime.getHours();
+                long ct=0;
+                long realCount=0;
+                long remainder=0;
+                lockAll.lock();
+                int lastHours=new Date().getHours();
                 while (true){
                     int nowHours=new Date().getHours();
                     if(nowHours<lastHours){
-                        lastHours=nowHours;
                         ct=0;
+                        GlobalVariable.totalTime=0;
                     }
-                    int msg=ct*gapTime;
-                    GlobalVariable.dayUsedTime=msg;
-                    myNotify("今天已玩手机 "+ct*gapTime+" 分钟，当心玩物丧志",GlobalVariable.notifyCount++);
-                    ct++;
+                    lastHours=nowHours;
+
+                    long nextTime=(ct+1)*sleepTime;
+                    long local=System.currentTimeMillis();
+                    long andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
+                    remainder=nextTime-andTime;
                     try {
-                        sleep(sleepTime);
+                        while (remainder>0){
+                            conditionAll.await(remainder+1000, TimeUnit.MILLISECONDS);
+                            local=System.currentTimeMillis();
+                            andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
+                            remainder=nextTime-andTime;
+                        }
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
+                    String title="你今天已玩手机 "+(ct+1)*gapTime+" 分钟,不要玩物丧志啊";
+                    myNotify(title,GlobalVariable.notifyCount++);
+                    ct++;
                 }
             }
         };

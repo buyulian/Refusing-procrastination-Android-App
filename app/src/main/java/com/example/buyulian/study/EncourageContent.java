@@ -1,7 +1,5 @@
 package com.example.buyulian.study;
 
-import android.content.Context;
-
 import java.util.Arrays;
 import java.util.Random;
 
@@ -63,8 +61,8 @@ public class EncourageContent {
             "要计算利弊，不要因小失大"
     };
     private static String[] content2=content;
-    static String endStr=";";
-    public static int[] gapTime=new int[]{3,20,40,60,120,180,300,600,1200,1800,3600};
+    static final String END_STR =";";
+    public final static int[] GAP_TIME =new int[]{3,20,40,60,120,180,300,600,1200,1800,3600};
     private int cursor=0;
 
     public String getNextContent() {
@@ -84,8 +82,8 @@ public class EncourageContent {
     }
 
     public boolean isRemind(int miller){
-        for(int i=0;i<gapTime.length;i++){
-            if(gapTime[i]==miller){
+        for(int i = 0; i< GAP_TIME.length; i++){
+            if(GAP_TIME[i]==miller){
                 return true;
             }
         }
@@ -94,7 +92,7 @@ public class EncourageContent {
 
     public static int getTimes(int miller){
         int ct=0;
-        while (gapTime[ct]<=miller){
+        while (GAP_TIME[ct]<=miller){
             ct++;
         }
         return ct;
@@ -103,12 +101,12 @@ public class EncourageContent {
     public static String getSaveStr(){
         StringBuilder sb=new StringBuilder();
         for(String str:EncourageContent.content){
-            sb.append(str).append(endStr);
+            sb.append(str).append(END_STR);
         }
         return sb.toString();
     }
 
     public static void setSaveStr(String str){
-        content=str.split(endStr);
+        content=str.split(END_STR);
     }
 }

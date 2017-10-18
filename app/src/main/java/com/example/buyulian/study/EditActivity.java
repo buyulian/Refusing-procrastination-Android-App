@@ -60,7 +60,7 @@ public class EditActivity extends Activity {
 
     private void refreshSp() {
         String content = editText.getText().toString();
-        String endStr = EncourageContent.endStr;
+        String endStr = EncourageContent.END_STR;
         String[] strs = content.split(endStr);
         EncourageContent.content = strs;
         SharedPreferences sp = getApplicationContext().getSharedPreferences("study", Context.MODE_PRIVATE);

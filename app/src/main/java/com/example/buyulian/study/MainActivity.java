@@ -16,8 +16,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
 
-import java.util.Date;
-
 public class MainActivity extends Activity {
     private Button button;
     private Button buttonExit;
@@ -62,7 +60,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        dayUsedTime.setText(String.valueOf(GlobalVariable.dayUsedTime));
+        long local=System.currentTimeMillis();
+        long andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
+        dayUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
     }
 
     private void initView(){
@@ -80,7 +80,13 @@ public class MainActivity extends Activity {
         startService(intent);
 
         chronometer.setText(intToTime(0));
-        dayUsedTime.setText(String.valueOf(GlobalVariable.dayUsedTime));
+
+        if(GlobalVariable.unlockTime<100){
+            GlobalVariable.unlockTime=System.currentTimeMillis();
+        }
+        long local=System.currentTimeMillis();
+        long andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
+        dayUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -168,11 +174,6 @@ public class MainActivity extends Activity {
 
     private void exit(){
         isFinished=true;
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         this.finish();
     }
 
@@ -218,7 +219,7 @@ public class MainActivity extends Activity {
     private void beginTime(){
         EncourageContent encourageContent=new EncourageContent();
         long beginMill=System.currentTimeMillis();
-        int maxD=EncourageContent.gapTime[EncourageContent.gapTime.length-1];
+        int maxD=EncourageContent.GAP_TIME[EncourageContent.GAP_TIME.length-1];
         int realCount=0;
         while (!isFinished){
             long nowWill=System.currentTimeMillis();
@@ -241,7 +242,7 @@ public class MainActivity extends Activity {
                 int shouldCount=EncourageContent.getTimes(superTime);
                 while (realCount<shouldCount){
                     String content=encourageContent.getNextContent();
-                    int shTime=EncourageContent.gapTime[realCount];
+                    int shTime=EncourageContent.GAP_TIME[realCount];
                     long realTime=beginMill+shTime*1000;
                     myNotify(content,GlobalVariable.notifyCount++,shTime,realTime);
                     realCount++;
