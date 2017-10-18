@@ -89,14 +89,14 @@ public class RemindService extends Service {
                 GlobalVariable.unlockTime=local;
                 lockAll.unlock();
                 lockOne.unlock();
-                Log.d("on","on");
+//                Log.d("on","on");
             }
 
             @Override
             public void onScreenOff() {
                 lockOne.lock();
                 lockAll.lock();
-                Log.d("off","off");
+//                Log.d("off","off");
                 GlobalVariable.isUnlockOn =0;
                 long local=System.currentTimeMillis();
                 long theta=local-GlobalVariable.unlockTime;

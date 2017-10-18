@@ -16,6 +16,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
 
+import java.util.Date;
+
 public class MainActivity extends Activity {
     private Button button;
     private Button buttonExit;
@@ -60,6 +62,11 @@ public class MainActivity extends Activity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        int nowDay=new Date().getDay();
+        if(nowDay>GlobalVariable.startUpDay){
+            GlobalVariable.totalTime=0;
+            GlobalVariable.startUpDay=nowDay;
+        }
         long local=System.currentTimeMillis();
         long andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
         dayUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
