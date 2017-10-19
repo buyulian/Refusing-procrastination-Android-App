@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
     private Spinner spinner;
     private TextView chronometer;
     private TextView dayUsedTime;
+    private TextView oneUsedTime;
     private Intent intent;
     private Intent intentEdit;
     private boolean isFinished=false;
@@ -67,9 +68,12 @@ public class MainActivity extends Activity {
             GlobalVariable.totalTime=0;
             GlobalVariable.startUpDay=nowDay;
         }
-        long local=System.currentTimeMillis();
-        long andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
+        long local=System.currentTimeMillis()-GlobalVariable.unlockTime;
+        long andTime=GlobalVariable.totalTime+local;
         dayUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
+
+        andTime=GlobalVariable.oneTime+local;
+        oneUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
     }
 
     private void initView(){
@@ -81,6 +85,8 @@ public class MainActivity extends Activity {
         spinner=findViewById(R.id.spinner1);
         chronometer=findViewById(R.id.chronometer);
         dayUsedTime=findViewById(R.id.dayUsedTime);
+        oneUsedTime=findViewById(R.id.oneUsedTime);
+
         intent=new Intent(this,RemindService.class);
         intentEdit=new Intent(this,EditActivity.class);
 
@@ -91,9 +97,17 @@ public class MainActivity extends Activity {
         if(GlobalVariable.unlockTime<100){
             GlobalVariable.unlockTime=System.currentTimeMillis();
         }
-        long local=System.currentTimeMillis();
-        long andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
+        int nowDay=new Date().getDay();
+        if(nowDay>GlobalVariable.startUpDay){
+            GlobalVariable.totalTime=0;
+            GlobalVariable.startUpDay=nowDay;
+        }
+        long local=System.currentTimeMillis()-GlobalVariable.unlockTime;
+        long andTime=GlobalVariable.totalTime+local;
         dayUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
+
+        andTime=GlobalVariable.oneTime+local;
+        oneUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -203,7 +217,7 @@ public class MainActivity extends Activity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification notification = builder
 
-                .setContentTitle("你已拖延 "+superTime+" 秒")
+                .setContentTitle("你已拖延"+Tools.getTimeString(superTime))
                 .setContentText(content)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

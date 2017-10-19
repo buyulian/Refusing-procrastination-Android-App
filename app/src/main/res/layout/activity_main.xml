@@ -60,7 +60,15 @@
             android:background="#66ffbb"
             android:textColor="@color/black"
             android:gravity="center"
-            android:textSize="60sp" />
+            android:textSize="50sp" />
+    <TextView
+            android:id="@+id/oneUsedTime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#6699ff"
+            android:textColor="@color/red"
+            android:gravity="center"
+            android:textSize="50sp" />
 
 
 </LinearLayout>

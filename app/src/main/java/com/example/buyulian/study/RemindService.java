@@ -30,26 +30,28 @@ public class RemindService extends Service {
             int gapTime=10;
             int sleepTime=gapTime*60*1000;
             long ct=0;
-            long realCount=0;
             long remainder=0;
             lockOne.lock();
-            while (true){
-                long nextTime=(ct+1)*sleepTime;
-                long local=System.currentTimeMillis();
-                long andTime=GlobalVariable.oneTime+local-GlobalVariable.unlockTime;
-                remainder=nextTime-andTime;
-                try {
+            try {
+                while (true){
+                    long local=System.currentTimeMillis();
+                    long andTime=GlobalVariable.oneTime+local-GlobalVariable.unlockTime;
+                    ct=andTime/sleepTime+1;
+                    long nextTime=ct*sleepTime;
+                    remainder=nextTime-andTime;
                     while (remainder>0){
                         conditionOne.await(remainder+1000,TimeUnit.MILLISECONDS);
                         local=System.currentTimeMillis();
                         andTime=GlobalVariable.oneTime+local-GlobalVariable.unlockTime;
                         remainder=nextTime-andTime;
                     }
-                } catch (InterruptedException e) {
+                    String title="你已连续玩手机"+Tools.getTimeString((int)(ct*gapTime*60))+",快去学习吧";
+                    myNotify(title,GlobalVariable.notifyCount++);
                 }
-                String title="你已连续玩手机 "+(ct+1)*gapTime+" 分钟,快去学习吧";
-                myNotify(title,GlobalVariable.notifyCount++);
-                ct++;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lockOne.unlock();
             }
 
         }
@@ -119,34 +121,35 @@ public class RemindService extends Service {
                 int gapTime=20;
                 int sleepTime=gapTime*60*1000;
                 long ct=0;
-                long realCount=0;
                 long remainder=0;
                 lockAll.lock();
-                int lastHours=new Date().getHours();
-                while (true){
-                    int nowHours=new Date().getHours();
-                    if(nowHours<lastHours){
-                        ct=0;
-                        GlobalVariable.totalTime=0;
-                    }
-                    lastHours=nowHours;
+                try {
+                    int lastHours=new Date().getHours();
+                    while (true){
+                        int nowHours=new Date().getHours();
+                        if(nowHours<lastHours){
+                            GlobalVariable.totalTime=0;
+                        }
+                        lastHours=nowHours;
 
-                    long nextTime=(ct+1)*sleepTime;
-                    long local=System.currentTimeMillis();
-                    long andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
-                    remainder=nextTime-andTime;
-                    try {
+                        long local=System.currentTimeMillis();
+                        long andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
+                        ct=andTime/sleepTime+1;
+                        long nextTime=ct*sleepTime;
+                        remainder=nextTime-andTime;
                         while (remainder>0){
                             conditionAll.await(remainder+1000, TimeUnit.MILLISECONDS);
                             local=System.currentTimeMillis();
                             andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
                             remainder=nextTime-andTime;
                         }
-                    } catch (InterruptedException e) {
+                        String title="你今天已玩手机"+Tools.getTimeString((int)(ct*gapTime*60))+",不要玩物丧志啊";
+                        myNotify(title,GlobalVariable.notifyCount++);
                     }
-                    String title="你今天已玩手机 "+(ct+1)*gapTime+" 分钟,不要玩物丧志啊";
-                    myNotify(title,GlobalVariable.notifyCount++);
-                    ct++;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    lockAll.unlock();
                 }
             }
         };
