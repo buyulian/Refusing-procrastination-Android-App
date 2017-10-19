@@ -29,24 +29,25 @@ public class RemindService extends Service {
         public void run() {
             int gapTime=10;
             int sleepTime=gapTime*60*1000;
-            long ct=0;
             long remainder=0;
             lockOne.lock();
             try {
                 while (true){
                     long local=System.currentTimeMillis();
                     long andTime=GlobalVariable.oneTime+local-GlobalVariable.unlockTime;
-                    ct=andTime/sleepTime+1;
-                    long nextTime=ct*sleepTime;
+                    long nextTime=GlobalVariable.oneCount*sleepTime;
                     remainder=nextTime-andTime;
                     while (remainder>0){
                         conditionOne.await(remainder+1000,TimeUnit.MILLISECONDS);
                         local=System.currentTimeMillis();
                         andTime=GlobalVariable.oneTime+local-GlobalVariable.unlockTime;
+                        nextTime=GlobalVariable.oneCount*sleepTime;
                         remainder=nextTime-andTime;
                     }
-                    String title="你已连续玩手机"+Tools.getTimeString((int)(ct*gapTime*60))+",快去学习吧";
+                    int notifyTime=(int)(GlobalVariable.oneCount*gapTime*60);
+                    String title="你已连续玩手机"+Tools.getTimeString(notifyTime)+",快去学习吧";
                     myNotify(title,GlobalVariable.notifyCount++);
+                    GlobalVariable.oneCount++;
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -86,6 +87,7 @@ public class RemindService extends Service {
                 long local=System.currentTimeMillis();
                 if(local-GlobalVariable.validLockTime>Constants.MIN_TIME_GAP){
                     GlobalVariable.oneTime=0;
+                    GlobalVariable.oneCount=1;
                     GlobalVariable.validUnlockTime =local;
                 }
                 GlobalVariable.unlockTime=local;
@@ -120,7 +122,6 @@ public class RemindService extends Service {
             public void run() {
                 int gapTime=20;
                 int sleepTime=gapTime*60*1000;
-                long ct=0;
                 long remainder=0;
                 lockAll.lock();
                 try {
@@ -129,22 +130,25 @@ public class RemindService extends Service {
                         int nowHours=new Date().getHours();
                         if(nowHours<lastHours){
                             GlobalVariable.totalTime=0;
+                            GlobalVariable.totalCount=1;
                         }
                         lastHours=nowHours;
 
                         long local=System.currentTimeMillis();
                         long andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
-                        ct=andTime/sleepTime+1;
-                        long nextTime=ct*sleepTime;
+                        long nextTime=GlobalVariable.totalCount*sleepTime;
                         remainder=nextTime-andTime;
                         while (remainder>0){
                             conditionAll.await(remainder+1000, TimeUnit.MILLISECONDS);
                             local=System.currentTimeMillis();
                             andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
+                            nextTime=GlobalVariable.totalCount*sleepTime;
                             remainder=nextTime-andTime;
                         }
-                        String title="你今天已玩手机"+Tools.getTimeString((int)(ct*gapTime*60))+",不要玩物丧志啊";
+                        int notifyTime=(int)(GlobalVariable.totalCount*gapTime*60);
+                        String title="你今天已玩手机"+Tools.getTimeString(notifyTime)+",不要玩物丧志啊";
                         myNotify(title,GlobalVariable.notifyCount++);
+                        GlobalVariable.totalCount++;
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

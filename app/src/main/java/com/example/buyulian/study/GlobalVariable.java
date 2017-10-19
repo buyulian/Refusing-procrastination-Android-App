@@ -12,7 +12,9 @@ public class GlobalVariable {
     public volatile static int startUpDay=new Date().getDay();
 
     public volatile static long totalTime=0;
+    public volatile static long totalCount=1;
     public volatile static long oneTime=0;
+    public volatile static long oneCount=1;
 
     public volatile static long lockTime;
     public volatile static long unlockTime;
