@@ -125,15 +125,7 @@ public class RemindService extends Service {
                 long remainder=0;
                 lockAll.lock();
                 try {
-                    int lastHours=new Date().getHours();
                     while (true){
-                        int nowHours=new Date().getHours();
-                        if(nowHours<lastHours){
-                            GlobalVariable.totalTime=0;
-                            GlobalVariable.totalCount=1;
-                        }
-                        lastHours=nowHours;
-
                         long local=System.currentTimeMillis();
                         long andTime=GlobalVariable.totalTime+local-GlobalVariable.unlockTime;
                         long nextTime=GlobalVariable.totalCount*sleepTime;

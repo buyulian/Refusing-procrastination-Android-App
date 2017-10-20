@@ -60,20 +60,33 @@ public class MainActivity extends Activity {
         initString();
     }
 
+    private void initText(){
+        long local=System.currentTimeMillis();
+        long nowDay=local/(1000*60*60*24);
+        if(nowDay>GlobalVariable.startUpDay){
+            GlobalVariable.totalTime=0;
+            GlobalVariable.totalCount=1;
+            GlobalVariable.oneTime=0;
+            GlobalVariable.oneCount=1;
+            GlobalVariable.unlockTime=local;
+            GlobalVariable.lockTime=local;
+            GlobalVariable.validUnlockTime=local;
+            GlobalVariable.validLockTime=local;
+
+            GlobalVariable.startUpDay=nowDay;
+        }
+        long onTime=local-GlobalVariable.unlockTime;
+        long andTime=GlobalVariable.totalTime+onTime;
+        dayUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
+
+        andTime=GlobalVariable.oneTime+onTime;
+        oneUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
+    }
+
     @Override
     protected void onRestart() {
         super.onRestart();
-        int nowDay=new Date().getDay();
-        if(nowDay>GlobalVariable.startUpDay){
-            GlobalVariable.totalTime=0;
-            GlobalVariable.startUpDay=nowDay;
-        }
-        long local=System.currentTimeMillis()-GlobalVariable.unlockTime;
-        long andTime=GlobalVariable.totalTime+local;
-        dayUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
-
-        andTime=GlobalVariable.oneTime+local;
-        oneUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
+        initText();
     }
 
     private void initView(){
@@ -94,20 +107,7 @@ public class MainActivity extends Activity {
 
         chronometer.setText(intToTime(0));
 
-        if(GlobalVariable.unlockTime<100){
-            GlobalVariable.unlockTime=System.currentTimeMillis();
-        }
-        int nowDay=new Date().getDay();
-        if(nowDay>GlobalVariable.startUpDay){
-            GlobalVariable.totalTime=0;
-            GlobalVariable.startUpDay=nowDay;
-        }
-        long local=System.currentTimeMillis()-GlobalVariable.unlockTime;
-        long andTime=GlobalVariable.totalTime+local;
-        dayUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
-
-        andTime=GlobalVariable.oneTime+local;
-        oneUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
+        initText();
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

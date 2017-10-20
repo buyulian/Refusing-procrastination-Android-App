@@ -9,7 +9,8 @@ public class GlobalVariable {
 
     public volatile static int notifyCount=0;
     public volatile static int isUnlockOn =1;
-    public volatile static int startUpDay=new Date().getDay();
+
+    public volatile static long startUpDay=-1;
 
     public volatile static long totalTime=0;
     public volatile static long totalCount=1;
