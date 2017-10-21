@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 
     private void initText(){
         long local=System.currentTimeMillis();
-        long nowDay=local/(1000*60*60*24);
+        long nowDay=(local+1000*60*60*3)/(1000*60*60*24);
         if(nowDay>GlobalVariable.startUpDay){
             GlobalVariable.totalTime=0;
             GlobalVariable.totalCount=1;
