@@ -6,8 +6,8 @@ import java.util.Random;
 public class EncourageContent {
     static public String[] content={
             "拖延一点事小，破坏计划事大",
-            "务以时间短而不学习，哪怕一秒",
-            "务以时间短而浪费，积少成多",
+            "勿以时间短而不学习，哪怕一秒",
+            "勿以时间短而浪费，积少成多",
             "方法大于努力，思考大于蛮干",
             "弱肉强食，别人才不在乎你的死活",
             "你不努力，怎么配得上优秀的人",
