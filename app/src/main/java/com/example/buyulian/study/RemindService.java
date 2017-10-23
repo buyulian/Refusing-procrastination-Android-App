@@ -83,8 +83,9 @@ public class RemindService extends Service {
 
             @Override
             public void onScreenOn() {
-                GlobalVariable.isUnlockOn =1;
                 long local=System.currentTimeMillis();
+                Tools.initDayTime(local);
+
                 if(local-GlobalVariable.validLockTime>Constants.MIN_TIME_GAP){
                     GlobalVariable.oneTime=0;
                     GlobalVariable.oneCount=1;
@@ -101,7 +102,6 @@ public class RemindService extends Service {
                 lockOne.lock();
                 lockAll.lock();
 //                Log.d("off","off");
-                GlobalVariable.isUnlockOn =0;
                 long local=System.currentTimeMillis();
                 long theta=local-GlobalVariable.unlockTime;
                 if(theta>Constants.MIN_ON_TIME_GAP){
@@ -170,7 +170,7 @@ public class RemindService extends Service {
 
 
 
-    void myNotify(String title,int id){
+    void myNotify(String content,int id){
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         Intent intent = new Intent(this, MainActivity.class);
@@ -178,8 +178,8 @@ public class RemindService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification notification = builder
 
-                .setContentTitle(title)
-                .setContentText(EncourageContent.getRandomContent())
+                .setContentTitle(EncourageContent.getRandomContent())
+                .setContentText(content)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())

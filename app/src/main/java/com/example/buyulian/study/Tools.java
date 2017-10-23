@@ -20,4 +20,20 @@ public class Tools {
         }
         return sb.toString();
     }
+
+    public static void initDayTime(long local){
+        long nowDay=(local+1000*60*60*3)/(1000*60*60*24);
+        if(nowDay>GlobalVariable.startUpDay){
+            GlobalVariable.totalTime=0;
+            GlobalVariable.totalCount=1;
+            GlobalVariable.oneTime=0;
+            GlobalVariable.oneCount=1;
+            GlobalVariable.unlockTime=local;
+            GlobalVariable.lockTime=local;
+            GlobalVariable.validUnlockTime=local;
+            GlobalVariable.validLockTime=local;
+
+            GlobalVariable.startUpDay=nowDay;
+        }
+    }
 }

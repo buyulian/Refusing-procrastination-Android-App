@@ -62,19 +62,7 @@ public class MainActivity extends Activity {
 
     private void initText(){
         long local=System.currentTimeMillis();
-        long nowDay=(local+1000*60*60*3)/(1000*60*60*24);
-        if(nowDay>GlobalVariable.startUpDay){
-            GlobalVariable.totalTime=0;
-            GlobalVariable.totalCount=1;
-            GlobalVariable.oneTime=0;
-            GlobalVariable.oneCount=1;
-            GlobalVariable.unlockTime=local;
-            GlobalVariable.lockTime=local;
-            GlobalVariable.validUnlockTime=local;
-            GlobalVariable.validLockTime=local;
-
-            GlobalVariable.startUpDay=nowDay;
-        }
+        Tools.initDayTime(local);
         long onTime=local-GlobalVariable.unlockTime;
         long andTime=GlobalVariable.totalTime+onTime;
         dayUsedTime.setText(intToTime((int)(andTime/Constants.SECOND)));
@@ -209,7 +197,7 @@ public class MainActivity extends Activity {
     }
 
 
-    void myNotify(String content,int id,int superTime,long millisTime){
+    void myNotify(String title,int id,int superTime,long millisTime){
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         Intent intent = new Intent(this, MainActivity.class);
@@ -217,8 +205,8 @@ public class MainActivity extends Activity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification notification = builder
 
-                .setContentTitle("你已拖延"+Tools.getTimeString(superTime))
-                .setContentText(content)
+                .setContentTitle(title)
+                .setContentText("你已拖延"+Tools.getTimeString(superTime))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setWhen(millisTime)
