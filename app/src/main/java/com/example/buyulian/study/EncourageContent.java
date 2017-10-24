@@ -5,6 +5,8 @@ import java.util.Random;
 
 public class EncourageContent {
     static public String[] content={
+            "没有借口，立即执行",
+            "找一点借口就会落入万丈深渊",
             "拖延一点事小，破坏计划事大",
             "勿以时间短而不学习，哪怕一秒",
             "勿以时间短而浪费，积少成多",
