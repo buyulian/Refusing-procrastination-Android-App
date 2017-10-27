@@ -10,7 +10,7 @@
               android:id="@+id/content_edit"
               android:textSize="14sp"
               android:minLines="16"
-              android:maxLines="30"
+              android:maxLines="28"
               android:background="#99ffff"
               android:layout_height="wrap_content"/>
     <Button
