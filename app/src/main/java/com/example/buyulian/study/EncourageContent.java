@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class EncourageContent {
     static public String[] content={
+            "Deadline 是第一生产力",
             "没有借口，立即执行",
             "找一点借口就会落入万丈深渊",
             "拖延一点事小，破坏计划事大",
