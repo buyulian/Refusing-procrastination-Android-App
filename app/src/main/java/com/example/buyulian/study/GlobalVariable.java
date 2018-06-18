@@ -20,4 +20,6 @@ public class GlobalVariable {
     public volatile static long unlockTime;
     public volatile static long validLockTime;
     public volatile static long validUnlockTime;
+
+    public volatile static boolean isNotify=true;
 }
