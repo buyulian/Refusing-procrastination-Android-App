@@ -27,7 +27,7 @@ public class RemindService extends Service {
     private Thread singleTime=new Thread(new Runnable() {
         @Override
         public void run() {
-            int gapTime=10;
+            int gapTime=20;
             int sleepTime=gapTime*60*1000;
             long remainder=0;
             lockOne.lock();
@@ -120,7 +120,7 @@ public class RemindService extends Service {
         Thread thread=new Thread(){
             @Override
             public void run() {
-                int gapTime=20;
+                int gapTime=60;
                 int sleepTime=gapTime*60*1000;
                 long remainder=0;
                 lockAll.lock();
@@ -171,6 +171,9 @@ public class RemindService extends Service {
 
 
     void myNotify(String content,int id){
+        if(!GlobalVariable.isNotify){
+            return;
+        }
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         Intent intent = new Intent(this, MainActivity.class);
