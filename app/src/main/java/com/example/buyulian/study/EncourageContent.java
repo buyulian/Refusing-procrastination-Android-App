@@ -5,6 +5,10 @@ import java.util.Random;
 
 public class EncourageContent {
     static public String[] content={
+            "你喜欢的女生能看得上你吗？",
+            "你买房了吗?",
+            "延迟满足、学习复利",
+            "你忘了曾经是怎么被欺负和看不起的吗?",
             "Deadline 是第一生产力",
             "没有借口，立即执行",
             "找一点借口就会落入万丈深渊",
@@ -13,14 +17,10 @@ public class EncourageContent {
             "勿以时间短而浪费，积少成多",
             "方法大于努力，思考大于蛮干",
             "弱肉强食，别人才不在乎你的死活",
-            "你不努力，怎么配得上优秀的人",
             "坚持不下去时，想想利益和危害",
-            "你有房了、车了和女朋友了吗？",
             "你对的父母起早贪黑干脏活累活供你上学吗?",
-            "你忘了别人有多现实，多势利了吗?",
             "你今天多努力一点，明天你就少求别人一点",
             "莫欺少年穷",
-            "不要让人看不起",
             "今日之辱，我不想再受第二次",
             "上火，感冒，不锻炼的后果就是前车之鉴",
             "今天多努力一点，明天你会轻松十点。",
@@ -45,7 +45,6 @@ public class EncourageContent {
             "脏手不要揉眼，摸身上其他部分",
             "说话一定要三思而后行，祸从口出",
             "要考虑收益和付出来决定一件事值不值",
-            "早安励志，晚安温情",
             "天上掉馅饼的必是骗局",
             "你的聪明还差太远，多总结",
             "每天多学一点，一年将是一个天文数字",
@@ -67,6 +66,10 @@ public class EncourageContent {
     static final String END_STR =";";
     public final static int[] GAP_TIME =new int[]{3,20,40,60,120,180,300,600,1200,1800,3600};
     private int cursor=0;
+
+    static {
+
+    }
 
     public String getNextContent() {
         String rs=content[cursor%content.length];
