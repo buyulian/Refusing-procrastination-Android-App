@@ -22,8 +22,8 @@ public class MainActivity extends Activity {
     private Button button;
     private Button buttonExit;
     private Button buttonEdit;
+    private Button buttonNotifySwitch;
     private Button buttonNext;
-    private Button buttonRandomNext;
     private Spinner spinner;
     private TextView chronometer;
     private TextView dayUsedTime;
@@ -81,8 +81,8 @@ public class MainActivity extends Activity {
         button=findViewById(R.id.button);
         buttonExit=findViewById(R.id.buttonExit);
         buttonEdit=findViewById(R.id.buttonEdit);
+        buttonNotifySwitch=findViewById(R.id.buttonNotifySwitch);
         buttonNext=findViewById(R.id.buttonNext);
-        buttonRandomNext=findViewById(R.id.buttonRandomNext);
         spinner=findViewById(R.id.spinner1);
         chronometer=findViewById(R.id.chronometer);
         dayUsedTime=findViewById(R.id.dayUsedTime);
@@ -139,18 +139,23 @@ public class MainActivity extends Activity {
             }
         });
 
+        buttonNotifySwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GlobalVariable.isNotify=!GlobalVariable.isNotify;
+                String str="关闭";
+                if(GlobalVariable.isNotify){
+                    str="开启";
+                }
+                Toast.makeText(MainActivity.this,"通知已"+str,0).show();
+            }
+        });
+
         buttonNext.setOnClickListener(new View.OnClickListener() {
             EncourageContent encourageContent=new EncourageContent();
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,encourageContent.getNextContent(),0).show();
-            }
-        });
-
-        buttonRandomNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this,EncourageContent.getRandomContent(),0).show();
             }
         });
 
