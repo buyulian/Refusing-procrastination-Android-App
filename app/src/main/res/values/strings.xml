@@ -6,6 +6,9 @@
     <string name="button_exit">退出</string>
     <string name="button_edit">编辑</string>
     <string name="next">下一个</string>
+    <string name="onCard">上班打卡</string>
+    <string name="offCard">下班打卡</string>
+    <string name="workHours">填写工时</string>
     <string name="random_next">随机下一个</string>
     <string name="notify_switch">通知开关</string>
     <string name="content_edit">编辑</string>
