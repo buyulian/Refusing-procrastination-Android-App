@@ -15,27 +15,51 @@ import android.support.v7.app.NotificationCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import java.util.Date;
 
 public class MainActivity extends Activity {
-    private Button button;
-    private Button buttonExit;
-    private Button buttonEdit;
-    private Button buttonNotifySwitch;
-    private Button buttonNext;
-    private Spinner spinner;
-    private TextView chronometer;
-    private TextView dayUsedTime;
-    private TextView oneUsedTime;
+
+    @BindView(R.id.button)
+    Button button;
+
+    @BindView(R.id.buttonExit)
+    Button buttonExit;
+
+    @BindView(R.id.buttonEdit)
+    Button buttonEdit;
+
+    @BindView(R.id.buttonNotifySwitch)
+    Button buttonNotifySwitch;
+
+    @BindView(R.id.buttonNext)
+    Button buttonNext;
+
+    @BindView(R.id.spinner1)
+    Spinner spinner;
+
+    @BindView(R.id.chronometer)
+    TextView chronometer;
+
+    @BindView(R.id.dayUsedTime)
+    TextView dayUsedTime;
+
+    @BindView(R.id.oneUsedTime)
+    TextView oneUsedTime;
+
     private Intent intent;
+
     private Intent intentEdit;
+
     private boolean isFinished=false;
     private int limitTime=180;
     boolean change=false;
+
     private Thread thread;
 
-    final Handler handler=new Handler(){
+    private final Handler handler=new Handler(){
         private boolean t=true;
         @Override
         public void handleMessage(Message msg) {
@@ -56,6 +80,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         initView();
         initString();
     }
@@ -78,15 +103,6 @@ public class MainActivity extends Activity {
     }
 
     private void initView(){
-        button=findViewById(R.id.button);
-        buttonExit=findViewById(R.id.buttonExit);
-        buttonEdit=findViewById(R.id.buttonEdit);
-        buttonNotifySwitch=findViewById(R.id.buttonNotifySwitch);
-        buttonNext=findViewById(R.id.buttonNext);
-        spinner=findViewById(R.id.spinner1);
-        chronometer=findViewById(R.id.chronometer);
-        dayUsedTime=findViewById(R.id.dayUsedTime);
-        oneUsedTime=findViewById(R.id.oneUsedTime);
 
         intent=new Intent(this,RemindService.class);
         intentEdit=new Intent(this,EditActivity.class);

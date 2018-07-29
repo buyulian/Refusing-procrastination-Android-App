@@ -7,25 +7,32 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class EditActivity extends Activity {
-    private Button buttonSave;
-    private Button buttonExit;
-    private Button buttonReset;
-    private EditText editText;
+
+    @BindView(R.id.buttonSave)
+    Button buttonSave;
+
+    @BindView(R.id.buttonExit2)
+    Button buttonExit;
+
+    @BindView(R.id.buttonReset)
+    Button buttonReset;
+
+    @BindView(R.id.content_edit)
+    EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+        ButterKnife.bind(this);
         initView();
     }
 
     private void initView() {
-        editText = findViewById(R.id.content_edit);
-        buttonSave = findViewById(R.id.buttonSave);
-        buttonExit = findViewById(R.id.buttonExit2);
-        buttonReset = findViewById(R.id.buttonReset);
 
         editText.setText(EncourageContent.getSaveStr());
 
